@@ -49,7 +49,6 @@ class Session(models.Model):
     seats = fields.Integer(string="Number of seats")
     active = fields.Boolean(default=True)
     color = fields.Integer()
-
     instructor_id = fields.Many2one('res.partner', string="Instructor",
         domain=['|', ('instructor', '=', True),
                      ('category_id.name', 'ilike', "Teacher")])
@@ -68,11 +67,12 @@ class Session(models.Model):
     attendees_count = fields.Integer(
         string="Attendees count", compute='_get_attendees_count', store=True)
 
+
     state = fields.Selection([
-        ('draft', "Draft"),
-        ('confirmed', "Confirmed"),
-        ('done', "Done"),
-    ], default='draft')
+        ('draft', "1 Draft"),
+        ('confirmed', "2 Confirmed"),
+        ('done', "3  Done"),
+    ])
 
     @api.multi
     def action_draft(self):
@@ -114,7 +114,7 @@ class Session(models.Model):
     @api.depends('start_date', 'duration')
     def _get_end_date(self):
         for r in self:
-            print str(r) + " get end date"
+            # print str(r) + " get end date"
             if not (r.start_date and r.duration):
                 r.end_date = r.start_date
                 continue
@@ -127,7 +127,7 @@ class Session(models.Model):
 
     def _set_end_date(self):
         for r in self:
-            print str(r) + " set end date"
+            # print str(r) + " set end date"
             if not (r.start_date and r.end_date):
                 continue
 
